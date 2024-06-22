@@ -1,0 +1,50 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies for Lambda function one
+        run: |
+          cd src/lambda_function_one
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          zip -r ../../lambda_function_payload/lambda_function_one_payload.zip .
+
+      - name: Install dependencies for Lambda function two
+        run: |
+          cd src/lambda_function_two
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          zip -r ../../lambda_function_payload/lambda_function_two_payload.zip .
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
+      - name: Terraform Init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terraform init
+
+      - name: Terraform Apply
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terraform apply -auto-approve
