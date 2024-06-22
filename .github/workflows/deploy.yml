@@ -11,40 +11,30 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: '3.9'
 
-      - name: Install dependencies for Lambda function one
+      - name: Install dependencies
         run: |
-          cd src/lambda_function_one
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          zip -r ../../lambda_function_payload/lambda_function_one_payload.zip .
+          pip install -r src/requirements.txt
 
-      - name: Install dependencies for Lambda function two
-        run: |
-          cd src/lambda_function_two
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          zip -r ../../lambda_function_payload/lambda_function_two_payload.zip .
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          terraform_version: 1.0.0
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
 
-      - name: Terraform Init
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform init
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
 
-      - name: Terraform Apply
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform apply -auto-approve
+      - name: Initialize Terraform
+        run: terraform -chdir=terraform init
+
+      - name: Apply Terraform
+        run: terraform -chdir=terraform apply -auto-approve
