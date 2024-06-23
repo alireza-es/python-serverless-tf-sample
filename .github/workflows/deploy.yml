@@ -24,7 +24,7 @@ jobs:
           pip install -r src/requirements.txt
       - name: Build Lambda package
         run: |
-          docker run --rm -v ${{ github.workspace }}:/var/task "lambci/lambda:build-python3.8" /bin/sh -c "pip install -r src/requirements.txt -t . && zip -r lambda_package.zip ."
+          docker run --rm -v ${{ github.workspace }}:/var/task "lambci/lambda:build-python3.8" /bin/sh -c "cd src && pip install -r requirements.txt -t . && zip -r ../lambda_package.zip ."
         working-directory: src
 
       - name: Configure AWS credentials
