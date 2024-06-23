@@ -2,7 +2,7 @@ import json
 import logging
 import numpy as np
 import pandas as pd
-from common.utils import sample_function
+# from common.utils import sample_function
 
 def lambda_handler(event, context):
     logging.info('Lambda function one has been called.')
@@ -12,7 +12,7 @@ def lambda_handler(event, context):
     df = pd.DataFrame({'col1': [1, 2], 'col2': [3, 4]})
 
     # Sample function from common module
-    sample_result = sample_function()
+    # sample_result = sample_function()
 
     return {
         'statusCode': 200,
