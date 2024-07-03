@@ -42,7 +42,7 @@ jobs:
           echo "export TF_CLOUD_ORGANIZATION=honeybee-logic" >> $GITHUB_ENV
 
       - name: Initialize Terraform
-        run: terraform -chdir=terraform init -backend-config="bucket=terraform.tfstate"
+        run: terraform -chdir=terraform init -backend-config="bucket=myterraform.tfstate"
       - name: Plan Terraform
         run: terraform -chdir=terraform plan
       - name: Apply Terraform
