@@ -13,6 +13,7 @@ def lambda_handler(event, context):
 
     # Sample function from common module
     # sample_result = sample_function()
+    sample_result = 'Sample function result'
 
     return {
         'statusCode': 200,
