@@ -8,7 +8,8 @@ resource "aws_lambda_function" "example_lambda" {
 
     environment {
         variables = {
-            EXAMPLE_VAR = "exampleValue"
+            EXAMPLE_VAR1 = "exampleValue1",
+            EXAMPLE_VAR2 = "exampleValue2"
         }
     }
 }
