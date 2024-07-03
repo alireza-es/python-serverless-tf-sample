@@ -37,9 +37,13 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3.1.1
 
+      - name: Set Variables
+        run: |
+          echo "export TF_CLOUD_ORGANIZATION=honeybee-logic" >> $GITHUB_ENV
+
       - name: Initialize Terraform
         run: terraform -chdir=terraform init
-      - name: Import existing resources  
+      - name: Import existing resources
         run: terraform -chdir=terraform import aws_iam_role.lambda_exec_role arn:aws:iam::802697717686:role/lambda_exec_role
       - name: Plan Terraform
         run: terraform -chdir=terraform plan
