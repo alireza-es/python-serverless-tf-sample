@@ -3,7 +3,7 @@ module "lambda" {
 }
 terraform {
   backend "s3" {
-    region = var.aws_region
+    region = "ca-central-1"
     key    = "myterraform.tfstate"
   }
 }
